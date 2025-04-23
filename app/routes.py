@@ -79,6 +79,7 @@ def logout():
 @app.route("/coursetools", methods=["POST", "GET"])
 def coursetools():
     """Show teachers a page to view all courses."""
+    # Omitting the following data results in any user being able to view this page, when only teachers should be able to.
     # if not data.permission_check(session, "teacher"):
     #    return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
     courses = data.coursetools_courses()

@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}Kurssityökalut{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            <h2>Luo kurssi</h2>
+            <form action="/createcourse" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <div class="form-floating">
+                    <input class="form-control mb-3" name="course_name" id="course_name" type="text" placeholder="Kurssin nimi" minlength="1" required>
+                    <label for="course_name">Kurssin nimi:</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input class="form-control" name="credits" id="credits" type="number" placeholder="5" value="5" min="0" max="10" required>
+                    <label for="credits">Opintopisteet:</label>
+                </div>
+                <input class="btn btn-primary" type="submit" value="Luo kurssi">
+                {% if request.args.get("status") == "success" %}
+                <p>Kurssi {{ request.args.get("name") }} luotu onnistuneesti!</p>
+                {% endif %}
+                {% if request.args.get("status") == "fail" %}
+                <p>Kurssin luonti epäonnistui, yritä uudelleen.</p>
+                {% endif %}
+                {% if request.args.get("status") == "already_exists" %}
+                <p>Kurssi {{ request.args.get("name") }} on jo olemassa!</p>
+                {% endif %}
+            </form>
+            <hr>
+            <h2>Lista kursseista</h2>
+            {% if request.args.get("status") == "deleted" %}
+            <b>Kurssi {{ request.args.get("name") }} poistettu onnistuneesti!</b>
+            {% elif request.args.get("status") == "course_not_deletable" %}
+            <b>Kurssia ei ole olemassa, joten sitä ei v poistaa!</b>
+            {% endif %}
+            
+            {% if courses|length == 0 %}
+            <h3>Kurssilista on tyhjä.</h3>
+            {% else %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><b>Kurssi</b></th>
+                        <th><b>Opintopisteet</b></th>
+                        <th><b>Opettaja</b></th>
+                        <th><b>Opiskelijoita</b></th>
+                        <th colspan="2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses %}
+                    <tr>
+                        <td>{{ course["name"] }}</td>
+                        <td>{{ course["credits"] }}</td>
+                        <td>{{ course["username"] }}</td>
+                        {% if course["student_count"] is none %}
+                        <td>0</td>
+                        {% else %}
+                        <td>{{ course["student_count"] }}</td>
+                        {% endif %}
+                        {% if session["username"] == course["username"] %}
+                        <td><a href="/deletecourse?id={{course[0]}}" style="color: red">Poista kurssi</a></td>
+                        <td><a href="/modifycourse?id={{course[0]}}">Muokkaa kurssia</a></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block title %}Tehtävien teko{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            {% if request.args.get("status") == "True" %}
+            <b style="color: green">Vastaus oikein!</b>
+            {% elif request.args.get("status") == "False" %}
+            <b style="color: red">Vastaus väärin!</b>
+            {% elif request.args.get("status") == "already_submitted" %}
+            <b style="color: red">Olet jo yrittänyt tätä tehtävää!</b>
+            {% endif %}
+            <h2 style="margin-bottom: 0px">{{ course['name'] }} Tehtävä {{ exercise_num }}</h2>
+            <a href="/exercises_materials?id={{ course['id'] }}">Takaisin kurssin materiaaleihin</a>
+            <br>
+            <h2 style="margin-top: 5px">{{ exercise[1] }}</h2>
+            {% if submission is none %}
+            <form action="/submit_answer" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <input type="hidden" name="course_id" value="{{ course['id'] }}">
+                <input type="hidden" name="exercise_id" value="{{ exercise['id'] }}">
+                <input type="hidden" name="exercise_num" value="{{ exercise_num }}">
+                {% if exercise[2] is not mapping %}
+                <input type="hidden" name="exercise_type" value="text_exercise">
+                <p>Kirjoita vastaus (väh. 50 merkkiä) seuraavaan teksikenttään:</p>
+                <textarea class="form-control" id="answer-input" name="answer" rows="4" cols="50" minlength="50" required></textarea>
+                <p style="margin-top: 0px; color: #86857f">
+                    Merkkejä: <span id="counter">0</span>
+                </p>
+                {% else %}
+                <input type="hidden" name="exercise_type" value="multiple_choice">
+                <p>Valitse oikea vastaus seuraavista vaihtoehdoista:</p>
+                <ul style="list-style-type: none">
+                    <li> <input type="radio" name="answer" value="1" required> {{ exercise[2]["choices"][0] }}</li>
+                    <li> <input type="radio" name="answer" value="2"> {{ exercise[2]["choices"][1] }}</li>
+                    <li> <input type="radio" name="answer" value="3"> {{ exercise[2]["choices"][2] }}</li>
+                    <li> <input type="radio" name="answer" value="4"> {{ exercise[2]["choices"][3] }}</li>
+                </ul>
+                {% endif %}
+                <b>Voit lähettää vastauksen vain kerran!</b>
+                <br>
+                <input class="btn btn-primary" type="submit" value="Lähetä vastaus">
+            </form>
+            {% elif exercise[2] is not mapping and (submission["correct"] is not none or request.args.get("show_answer") == "True") %}
+            <b>Vastauksesi:</b>
+            <br>
+            <textarea class="form-control" style="resize: none" rows="4" cols="50" readonly>{{ submission["answer"] }}</textarea>
+            <br>
+            <b>Mallivastaus:</b>
+            <br>
+            <textarea class="form-control" resize: none" name="example_answer" rows="4" cols="50" readonly>{{ exercise["choices"] }}</textarea>
+            {% elif exercise[2] is mapping and (submission["correct"] is not none or request.args.get("show_answer") == "True") %}
+            <b>Vastasit: {{ exercise[2]["choices"][submission["answer"]|int - 1] }}</b>
+            <br>
+            <b>Oikea vastaus: {{ exercise[2]["choices"][exercise[2]["correct_answer"]|int - 1] }}</b>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById("answer-input").onkeyup = function countChars(event) {
+        const counterElement = document.getElementById("counter");
+        counter.innerText = event.target.value.length;
+    };
+</script>
+{% endblock %}

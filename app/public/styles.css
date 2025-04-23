@@ -1,0 +1,31 @@
+.flex {
+    display: flex;
+    gap: 15px;
+}
+
+.flex_gap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 150px;
+}
+
+.selection_gap {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    width: 25px;
+}
+
+table,
+td {
+  border: 1px solid #333;
+}
+
+.top_right {
+    position: fixed;
+    top: 0;
+    right: 0;
+    border: 1px solid #333;
+    margin: 3px;
+}

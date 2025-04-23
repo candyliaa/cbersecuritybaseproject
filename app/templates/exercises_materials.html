@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% block title %}Tehtävien teko ja materiaalit{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <h2>Valittu kurssi: {{ course['name'] }}</h2>
+            <a href="/coursesview">Takaisin kurssinäkymään</a>
+            <hr>
+            <h2>Tekstimateriaalit</h2>
+            {% if materials|length == 0 %}
+            <b>Kurssilla ei ole materiaaleja.</b>
+            {% else %}
+            <button class="btn btn-secondary" onclick="openDiv('list-materials');" style="margin-bottom: 5px">Listaa tekstimateriaalit</button>
+            <div id="list-materials" style="display: none">
+                {% for i in range(materials|length) %}
+                <b>{{ i + 1 }}. materiaali</b>
+                <br>
+                {{ materials[i][1] }}
+                <br>
+                <textarea class="form-control" style="resize: none" name="body" rows="5" cols="35" readonly>{{ materials[i][2] }}</textarea>
+                <br style="margin-bottom: 5px">
+                {% endfor %}
+            </div>
+            {% endif %}
+            <hr>
+            <h2>Tehtävät</h2>
+            {% if exercises|length == 0 %}
+            <b>Kurssilla ei ole tehtäviä.</b>
+            {% else %}
+            <b>Tehtävälista:</b>
+            {% for i in range(exercises|length) %}
+            {% if i % 5 == 0 %}
+            <br>
+            {% endif %}
+            {% if submissions[exercises[i][0]] == True %}
+            {% set col = "green" %}
+            {% elif submissions[exercises[i][0]] == False %}
+            {% set col = "red" %}
+            {% else %}
+            {% set col = "orange" %}
+            {% endif %}
+            <!--Visual Studio Code shows multiple errors here, although this code works-->
+            <a style="color: {{ col }};font-size: large" href="/do_exercise?course_id={{ course['id'] }}&exercise_id={{ exercises[i]['id'] }}&exercise_num={{ i + 1 }}">T{{ i + 1 }}</a>
+            {% endfor %}
+            {% endif %}
+            <br>
+            <p>Tehtäviä oikein:</p>
+            {% set progress = (((correct_submissions|int) / (exercises|length)) * 100)|round(1, 'ceil') %}
+            <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{ progress }}%" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">{{ progress }}%</div>
+            </div>
+        </div>
+        <div class="col-6">
+            <b>Ohjeita</b>
+            <br>
+            <p>Tällä sivulla voit tehdä valitun kurssin tehtäviä ja katsella tekstimateriaaleja, joita opettaja on lisännyt.</p>
+            <button class="btn btn-secondary" onclick="openDiv('instructions')">Näytä ohjeet</button>
+            <div id="instructions" style="display: none">
+                <p>Näet tehtävälistassa tehtävän numeron (esim. T1, eli tehtävä 1) ja värin, joka merkkaa, missä vaiheessa tehtävä on.</p> 
+                <p><p style="color: green;display: inline">Vihreä</p> tarkoittaa, että tehtävä on tehty ja se meni oikein.</p>
+                <p><p style="color: red;display: inline">Punainen</p> tarkoittaa, että tehtävä on tehty mutta se meni väärin.</p>
+                <p><p style="color: orange;display: inline">Keltainen</p> tarkoittaa, että tehtävä on tekemättä.</p>
+                <p>Tehtävätyyppejä on kaksi, joista ensimmäinen on monivalintatehtäviä, joissa vain valitset vaihtoehdon, ja saat palautteen, onko se oikein.</p>
+                <p>Toinen tehtävätyyppi on esseetehtävä, jossa on kysymys, ja vastattuasi tehtävä merkitään oikein tehdyksi ja näet mallivastauksen.</p>
+                <p>Voit yrittää jokaista tehtävää vain kerran.</p>
+                <p style="color: red">Jos poistut kurssilta, kaikki lähettämäsi tehtävien ratkaisut poistetaan!</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function openDiv(divID) {
+        const div = document.getElementById(divID);
+        if (div.style.display === "none") {
+            div.style.display = "block";
+        } else {
+            div.style.display = "none";
+        }
+    }
+</script>
+{% endblock %}

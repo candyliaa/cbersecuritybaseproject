@@ -1,0 +1,18 @@
+services:
+  web:
+    build: app
+    stop_signal: SIGINT
+    ports:
+      - "8000:5000"
+    environment:
+      SECRET_KEY: KEY GOES HERE
+      DATABASE_URL: postgresql://tsoha:tsoha123@db/tsoha
+      PYTHONUNBUFFERED: 1
+  db:
+    build: db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: tsoha
+      POSTGRES_PASSWORD: tsoha123
+      POSTGRES_DB: tsoha

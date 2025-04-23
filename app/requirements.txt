@@ -1,0 +1,7 @@
+Flask
+Flask-SQLAlchemy
+Jinja2
+psycopg2
+python-dotenv
+SQLAlchemy
+Werkzeug

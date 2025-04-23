@@ -1,4 +1,5 @@
 """File containing all routes."""
+
 import secrets
 from flask import render_template, request, redirect, session, abort
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -36,7 +37,9 @@ def login():
                 session["username"] = username
                 session["role"] = account_type
                 session["user_id"] = user[0]
-                session["csrf_token"] = secrets.token_hex(16)
+                # If we assign a csrf token to the user session, the user can't submit a request to a malicious web application
+                # that pretends to be the actual application.
+                # session["csrf_token"] = secrets.token_hex(16)
                 return redirect("/")
             else:
                 return redirect("/?loginfailed=2")
@@ -61,6 +64,7 @@ def accountcreated():
     else:
         return redirect("/?status=account_exists")
 
+
 @app.route("/logout")
 def logout():
     """Delete current session values upon logging out."""
@@ -82,8 +86,9 @@ def coursetools():
 @app.route("/createcourse", methods=["POST"])
 def createcourse():
     """Create a course and add it to the database."""
-    if not data.csrf_token_check:
-        abort(403)
+    # The below fix checks if csrf tokens match before attempting to access the backend of the application.
+    # if not data.csrf_token_check:
+    #    abort(403)
     if not data.permission_check(session, "teacher"):
         return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
     if request.method == "POST":
@@ -164,8 +169,9 @@ def modifycourse():
 @app.route("/addtextmaterial", methods=["POST"])
 def addtextmaterial():
     """Add text materials and insert into the database."""
-    if not data.csrf_token_check:
-        abort(403)
+    # Similarly as above, the below fix would not let the application access the database if csrf tokens don't match.
+    # if not data.csrf_token_check:
+    #    abort(403)
     course_id = request.form["course_id"]
     if not data.permission_check(session, "teacher") or not data.correct_teacher(
         session, course_id
@@ -182,8 +188,8 @@ def addtextmaterial():
 @app.route("/exercisecreated", methods=["POST"])
 def exercisecreated():
     """Create an exercise of the user's choosing and insert into the database."""
-    if not data.csrf_token_check:
-        abort(403)
+    # if not data.csrf_token_check:
+    #    abort(403)
     course_id = request.form["course_id"]
     if not data.permission_check(session, "teacher") or not data.correct_teacher(
         session, course_id
@@ -287,7 +293,7 @@ def exercises_materials():
         exercises=course_exercises,
         submissions=submissions_dict,
         materials=course_materials,
-        correct_submissions=correct_submissions
+        correct_submissions=correct_submissions,
     )
 
 
@@ -319,8 +325,8 @@ def do_exercise():
 @app.route("/submit_answer", methods=["POST", "GET"])
 def submit_answer():
     """Check if there's already a submission for the exercise, then insert into the database."""
-    if not data.csrf_token_check:
-        abort(403)
+    # if not data.csrf_token_check:
+    #    abort(403)
     course_id = request.form["course_id"]
     if not data.permission_check(session, "student") or not data.student_in_course(
         session, course_id

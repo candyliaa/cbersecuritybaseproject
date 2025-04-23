@@ -7,13 +7,16 @@
         <div class="col-8">
             <h2>Luo kurssi</h2>
             <form action="/createcourse" method="POST">
-                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <!-- The below attaches a csrf token to the form, which then makes it so that cross-site request forgery isn't posible. -->
+                <!-- <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}"> -->
                 <div class="form-floating">
-                    <input class="form-control mb-3" name="course_name" id="course_name" type="text" placeholder="Kurssin nimi" minlength="1" required>
+                    <input class="form-control mb-3" name="course_name" id="course_name" type="text"
+                        placeholder="Kurssin nimi" minlength="1" required>
                     <label for="course_name">Kurssin nimi:</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input class="form-control" name="credits" id="credits" type="number" placeholder="5" value="5" min="0" max="10" required>
+                    <input class="form-control" name="credits" id="credits" type="number" placeholder="5" value="5"
+                        min="0" max="10" required>
                     <label for="credits">Opintopisteet:</label>
                 </div>
                 <input class="btn btn-primary" type="submit" value="Luo kurssi">
@@ -34,7 +37,7 @@
             {% elif request.args.get("status") == "course_not_deletable" %}
             <b>Kurssia ei ole olemassa, joten sitä ei v poistaa!</b>
             {% endif %}
-            
+
             {% if courses|length == 0 %}
             <h3>Kurssilista on tyhjä.</h3>
             {% else %}

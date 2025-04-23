@@ -1,4 +1,5 @@
 """File that contains helper functions for routes.py."""
+
 import json
 from sqlalchemy.sql import text
 from db import db
@@ -49,21 +50,37 @@ def correct_teacher(session: dict, course_id: str):
     return True
 
 
+# This function would be used to check if the csrf token of the active session matches the one in the form, preventing the vulnerability.
+'''
 def csrf_token_check(session: dict, form_token: str):
     """Check if the csrf token of the current user session matches the form's csrf token."""
     if session["csrf_token"] != form_token:
         return False
     return True
+'''
 
 
 # Login and account creation functions
+
+
+# This implementation lets users perform SQL injection due to unsanitized inputs.
 def login_fetch_user(account_type: str, username: str):
     """Fetch user data from database."""
     if account_type == "teacher":
-        sql = "SELECT id, password FROM teacher_accounts WHERE username = :username"
+        sql = f"SELECT id, password FROM teacher_accounts WHERE username = {username}"
     else:
-        sql = "SELECT id, password FROM student_accounts WHERE username = :username"
-    return db.session.execute(text(sql), {"username": username}).fetchone()
+        sql = f"SELECT id, password FROM student_accounts WHERE username = {username}"
+    return db.session.execute(text(sql)).fetchone()
+
+
+# This function safely fetches user data from the database by sanitizing input.
+# def login_fetch_user(account_type: str, username: str):
+#     """Fetch user data from database."""
+#     if account_type == "teacher":
+#         sql = "SELECT id, password FROM teacher_accounts WHERE username = :username"
+#     else:
+#         sql = "SELECT id, password FROM student_accounts WHERE username = :username"
+#     return db.session.execute(text(sql), {"username": username}).fetchone()
 
 
 def check_account_exists(username: str):
@@ -373,7 +390,7 @@ def exercises_and_materials(course_id: int, session: dict):
         "materials": materials,
         "course_exercises": course_exercises,
         "exercise_submissions": exercise_submissions,
-        "correct_submissions": correct_submissions
+        "correct_submissions": correct_submissions,
     }
 
     return data_dict

@@ -79,8 +79,8 @@ def logout():
 @app.route("/coursetools", methods=["POST", "GET"])
 def coursetools():
     """Show teachers a page to view all courses."""
-    if not data.permission_check(session, "teacher"):
-        return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
+    # if not data.permission_check(session, "teacher"):
+    #    return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
     courses = data.coursetools_courses()
     return render_template("coursetools.html", courses=courses)
 
@@ -91,8 +91,8 @@ def createcourse():
     # The below fix checks if csrf tokens match before attempting to access the backend of the application.
     # if not data.csrf_token_check:
     #    abort(403)
-    if not data.permission_check(session, "teacher"):
-        return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
+    # if not data.permission_check(session, "teacher"):
+    #     return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
     if request.method == "POST":
         course_name = request.form["course_name"]
         course_credits = int(request.form["credits"])
@@ -109,10 +109,10 @@ def createcourse():
 def deletecourse():
     """Remove a course from the database."""
     course_id = request.args.get("id")
-    if not data.permission_check(session, "teacher") or not data.correct_teacher(
-        session, course_id
-    ):
-        return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
+    # if not data.permission_check(session, "teacher") or not data.correct_teacher(
+    #    session, course_id
+    # ):
+    #    return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
     if not data.check_if_course_deletable:
         return redirect("/coursetools?status=course_not_deletable")
     course_name = data.delete_course(course_id)
@@ -123,10 +123,10 @@ def deletecourse():
 def modifycourse():
     """Add or exercises or text materials, or remove exercises."""
     course_id = request.args.get("id")
-    if not data.permission_check(session, "teacher") or not data.correct_teacher(
-        session, course_id
-    ):
-        return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
+    # if not data.permission_check(session, "teacher") or not data.correct_teacher(
+    #     session, course_id
+    # ):
+    #     return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
 
     course_data = data.modify_course_data(course_id)
     course = course_data["course"]
@@ -175,10 +175,10 @@ def addtextmaterial():
     # if not data.csrf_token_check:
     #    abort(403)
     course_id = request.form["course_id"]
-    if not data.permission_check(session, "teacher") or not data.correct_teacher(
-        session, course_id
-    ):
-        return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
+    # if not data.permission_check(session, "teacher") or not data.correct_teacher(
+    #     session, course_id
+    # ):
+    #     return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
 
     course_id = request.form["course_id"]
     title = request.form["title"]
@@ -193,10 +193,10 @@ def exercisecreated():
     # if not data.csrf_token_check:
     #    abort(403)
     course_id = request.form["course_id"]
-    if not data.permission_check(session, "teacher") or not data.correct_teacher(
-        session, course_id
-    ):
-        return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
+    # if not data.permission_check(session, "teacher") or not data.correct_teacher(
+    #     session, course_id
+    # ):
+    #     return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
     if request.method == "POST":
         exercise_type = request.form["exercise_type"]
         if exercise_type == "text_question":
@@ -228,10 +228,10 @@ def exercisecreated():
 def delete_exercise():
     """Delete the chosen exercise and remove it from the database."""
     course_id = request.args.get("course_id")
-    if not data.permission_check(session, "teacher") or not data.correct_teacher(
-        session, course_id
-    ):
-        return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
+    # if not data.permission_check(session, "teacher") or not data.correct_teacher(
+    #     session, course_id
+    # ):
+    #     return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
 
     exercise_id = request.args.get("exercise_id")
     if not data.check_if_exercise_exists(course_id, exercise_id):
@@ -273,10 +273,10 @@ def coursesview():
 def exercises_materials():
     """Display the exercises and materials for the given course."""
     course_id = request.args["id"]
-    if not data.permission_check(session, "student") or not data.student_in_course(
-        session, course_id
-    ):
-        return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
+    # if not data.permission_check(session, "student") or not data.student_in_course(
+    #     session, course_id
+    # ):
+    #     return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
 
     course_data = data.exercises_and_materials(course_id, session)
     course = course_data["course"]
@@ -303,10 +303,10 @@ def exercises_materials():
 def do_exercise():
     """Page for submitting answers to exercises, and inserting into the database."""
     course_id = request.args["course_id"]
-    if not data.permission_check(session, "student") or not data.student_in_course(
-        session, course_id
-    ):
-        return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
+    # if not data.permission_check(session, "student") or not data.student_in_course(
+    #     session, course_id
+    # ):
+    #     return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
     exercise_id = request.args["exercise_id"]
     exercise_num = request.args["exercise_num"]
 
@@ -330,10 +330,10 @@ def submit_answer():
     # if not data.csrf_token_check:
     #    abort(403)
     course_id = request.form["course_id"]
-    if not data.permission_check(session, "student") or not data.student_in_course(
-        session, course_id
-    ):
-        return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
+    # if not data.permission_check(session, "student") or not data.student_in_course(
+    #     session, course_id
+    # ):
+    #     return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
     answer = request.form["answer"]
     student_id = session["user_id"]
     exercise_id = request.form["exercise_id"]
@@ -367,8 +367,8 @@ def submit_answer():
 @app.route("/joincourse")
 def joincourse():
     """Join a course and insert data accordingly to the database."""
-    if not data.permission_check(session, "student"):
-        return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
+    # if not data.permission_check(session, "student"):
+    #     return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
     course_id = request.args.get("id")
     student_id = session["user_id"]
     if not data.already_in_course(student_id, course_id):
@@ -382,10 +382,10 @@ def joincourse():
 def leavecourse():
     """Leave a course and remove relevant data from the database."""
     course_id = request.args.get("id")
-    if not data.permission_check(session, "student") or not data.student_in_course(
-        session, course_id
-    ):
-        return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
+    # if not data.permission_check(session, "student") or not data.student_in_course(
+    #     session, course_id
+    # ):
+    #     return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
     student_id = session["user_id"]
     course_name = data.leave_course(student_id, course_id)
     return redirect(f"/coursesview?status=left&name={course_name}")

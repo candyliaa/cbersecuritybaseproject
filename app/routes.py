@@ -54,6 +54,13 @@ def accountcreated():
     """Create an account and insert into the database."""
     username = request.form["username"]
     password = request.form["password"]
+    # Here, perhaps the password should be inspected.
+    # Check if password contains at least one special character:
+    # special_chars = ["!", "?", "-", "_"]
+    # for char in special_chars:
+    #   if char not in password:
+    #       return redirect("/")
+    # etc.
     hash_value = generate_password_hash(password)
     account_type = request.form["role"]
     if data.check_account_exists(username):

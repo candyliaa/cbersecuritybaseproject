@@ -7,7 +7,7 @@
         <div class="col-6">
             <h2>Valittu kurssi: {{ course["name"] }} ({{ course["credits"] }} op)</h2>
             <a href="/coursetools">Takaisin kurssityökaluihin</a>
-            
+
             {% if materials|length == 0 %}
             <h3><b>Kurssilla ei ole tekstimateriaaleja.</b></h3>
             {% else %}
@@ -22,15 +22,16 @@
                 <br>
                 {{ materials[i][1] }}
                 <br>
-                <textarea class="form-control" style="resize: none" name="body" rows="5" cols="50" readonly>{{ materials[i][2] }}</textarea>
+                <textarea class="form-control" style="resize: none" name="body" rows="5" cols="50"
+                    readonly>{{ materials[i][2] }}</textarea>
                 <br>
                 {% endfor %}
             </div>
             {% endif %}
-            
+
             <button class="btn btn-primary" onclick="openDiv('materialform')">Lisää tekstimateriaalia</button>
             <div id="materialform" style="display: none">
-                <form action="/addtextmaterial", method="POST">
+                <form action="/addtextmaterial" , method="POST">
                     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                     <input type="hidden" name="course_id" value="{{ course['id'] }}">
                     <div class="form-floating mb-3">
@@ -38,13 +39,14 @@
                         <label for="title">Otsikko</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <textarea class="form-control" name="body" id="body" placeholder="Teksti" rows="5" cols="50" required></textarea>
+                        <textarea class="form-control" name="body" id="body" placeholder="Teksti" rows="5" cols="50"
+                            required></textarea>
                         <label for="body">Teksti</label>
                     </div>
                     <input class="btn btn-primary" type="submit" value="Lisää materiaali">
                 </form>
             </div>
-            
+
             {% if exercises|length == 0 %}
             <h3><b>Kurssilla ei ole tehtäviä.</b></h3>
             {% else %}
@@ -67,24 +69,26 @@
                 {% for i in range(exercises|length) %}
                 <b>{{ i + 1 }}. tehtävä</b>
                 <br>
-                <a href="/delete_exercise?course_id={{ course['id'] }}&exercise_id={{ exercises[i][0] }}" style="color: red">Poista tehtävä</a>
+                <a href="/delete_exercise?course_id={{ course['id'] }}&exercise_id={{ exercises[i][0] }}"
+                    style="color: red">Poista tehtävä</a>
                 <br>
                 {{exercises[i][1]}}
                 <br>
                 {% if exercises[i][2] is not mapping %}
                 <b>Mallivastaus</b>
                 <br>
-                <textarea class="form-control" style="resize: none" name="example_answer" rows="3" cols="50" readonly >{{ exercises[i][2] }}</textarea>
+                <textarea class="form-control" style="resize: none" name="example_answer" rows="3" cols="50"
+                    readonly>{{ exercises[i][2] }}</textarea>
                 <br style="line-height: 3">
                 {% else %}
                 <b>Vaihtoehdot</b>
                 <ul style="margin-top: 3px">
-                    <li> 
+                    <li>
                         {{ exercises[i][2]["choices"][0] }}
                         {% if exercises[i][2]["correct_answer"] == "1" %}
                         ✔
                         {% endif %}
-                    </li> 
+                    </li>
                     <li>
                         {{ exercises[i][2]["choices"][1] }}
                         {% if exercises[i][2]["correct_answer"] == "2" %}
@@ -107,12 +111,13 @@
                 {% endif %}
                 {% endfor %}
             </div>
-            
+
             <button class="btn btn-primary" onclick="openDiv('exerciseform')">Lisää tehtävä </button>
             <div id="exerciseform" style="display: none">
                 <br>
                 <button class="btn btn-secondary mb-3" onclick="openTextExercise()">Tekstitehtävä</button>
-                <button class="btn btn-secondary mb-3" onclick="openMultipleChoiceExercise()">Monivalintatehtävä</button>
+                <button class="btn btn-secondary mb-3"
+                    onclick="openMultipleChoiceExercise()">Monivalintatehtävä</button>
             </div>
             <div id="textform" style="display: none">
                 <form action="/exercisecreated" id="textform" method="POST">
@@ -120,11 +125,13 @@
                     <input type="hidden" name="course_id" value="{{ course['id'] }}">
                     <input type="hidden" name="exercise_type" value="text_question">
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="question" id="question" type="text" placeholder="Kysymys" minlength="1" required>
+                        <input class="form-control" name="question" id="question" type="text" placeholder="Kysymys"
+                            minlength="1" required>
                         <label for="question">Kysymys</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <textarea class="form-control" name="example_answer" placeholder="Vastaus" rows="3" cols="50"></textarea>
+                        <textarea class="form-control" name="example_answer" placeholder="Vastaus" rows="3"
+                            cols="50"></textarea>
                         <label for="example_answer">Vastaus</label>
                     </div>
                     <input class="btn btn-primary" type="submit" value="Luo tehtävä">
@@ -136,7 +143,8 @@
                     <input type="hidden" name="course_id" value="{{ course['id'] }}">
                     <input type="hidden" name="exercise_type" value="multiple_choice">
                     <div class="form-floating mb-3">
-                        <input class="form-control" name="question" id="question" type="text" placeholder="Kysymys" minlength="1" required>
+                        <input class="form-control" name="question" id="question" type="text" placeholder="Kysymys"
+                            minlength="1" required>
                         <label for="question">Kysymys</label>
                     </div>
                     Valinnat:
@@ -145,40 +153,48 @@
                         <li>
                             <div class="row g-2 align-items-center">
                                 <div class="col-auto">
-                                    <input class="form-check-input" type="radio" name="correct_answer" value="1" required>
+                                    <input class="form-check-input" type="radio" name="correct_answer" value="1"
+                                        required>
                                 </div>
                                 <div class="col-auto">
-                                    <input class="form-control" name="choice1" placeholder="1. valinta" type="text" minlength="1" required>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="row g-2 align-items-center">
-                                <div class="col-auto">
-                                    <input class="form-check-input" type="radio" name="correct_answer" value="2" required>
-                                </div>
-                                <div class="col-auto">
-                                    <input class="form-control" name="choice2" placeholder="2. valinta" type="text" minlength="1" required>
+                                    <input class="form-control" name="choice1" placeholder="1. valinta" type="text"
+                                        minlength="1" required>
                                 </div>
                             </div>
                         </li>
                         <li>
                             <div class="row g-2 align-items-center">
                                 <div class="col-auto">
-                                    <input class="form-check-input" type="radio" name="correct_answer" value="3" required>
+                                    <input class="form-check-input" type="radio" name="correct_answer" value="2"
+                                        required>
                                 </div>
                                 <div class="col-auto">
-                                    <input class="form-control" name="choice3" placeholder="3. valinta" type="text" minlength="1" required>
+                                    <input class="form-control" name="choice2" placeholder="2. valinta" type="text"
+                                        minlength="1" required>
                                 </div>
                             </div>
                         </li>
                         <li>
                             <div class="row g-2 align-items-center">
                                 <div class="col-auto">
-                                    <input class="form-check-input" type="radio" name="correct_answer" value="4" required>
+                                    <input class="form-check-input" type="radio" name="correct_answer" value="3"
+                                        required>
                                 </div>
                                 <div class="col-auto">
-                                    <input class="form-control" name="choice4" placeholder="4. valinta" type="text" minlength="1" required>
+                                    <input class="form-control" name="choice3" placeholder="3. valinta" type="text"
+                                        minlength="1" required>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="row g-2 align-items-center">
+                                <div class="col-auto">
+                                    <input class="form-check-input" type="radio" name="correct_answer" value="4"
+                                        required>
+                                </div>
+                                <div class="col-auto">
+                                    <input class="form-control" name="choice4" placeholder="4. valinta" type="text"
+                                        minlength="1" required>
                                 </div>
                             </div>
                         </li>
@@ -194,7 +210,7 @@
             <ul>
                 {% for _, student in submissions[i].items() %}
                 <li>
-                    {{ student["username"] }} 
+                    {{ student["username"] }}
                     {% if student["state"] == "correct" %}
                     ✔
                     {% elif student["state"] == "incorrect" %}
@@ -209,8 +225,10 @@
         </div>
         <div class="col-6">
             <b>Ohjeita</b>
-            <p>Tällä sivulla voit lisätä tekstimateriaaleja ja tehtäviä kurssillesi. Voit lisätä joko essee- tai monivalintatehtäviä.</p>
-            <p>Alla näet tehtävien palautusten tilanteen. Jokaisen kurssilla olevan opiskelijan kohdalla jokaisessa tehtävässä on merkki, joka näyttää, missä vaiheessa tehtävä on:</p>
+            <p>Tällä sivulla voit lisätä tekstimateriaaleja ja tehtäviä kurssillesi. Voit lisätä joko essee- tai
+                monivalintatehtäviä.</p>
+            <p>Alla näet tehtävien palautusten tilanteen. Jokaisen kurssilla olevan opiskelijan kohdalla jokaisessa
+                tehtävässä on merkki, joka näyttää, missä vaiheessa tehtävä on:</p>
             <p>✔ tarkoittaa, että tehtävä on tehty, ja se on oikein.</p>
             <p>✖ tarkoittaa, että tehtävä on tehty, mutta se meni väärin.</p>
             <p>// tarkoittaa, että oppilas ei ole vielä lähettänyt vastausta tehtävään.</p>

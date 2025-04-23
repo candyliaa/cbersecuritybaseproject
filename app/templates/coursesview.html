@@ -8,13 +8,13 @@
             {% if request.args.get("status") == "left" %}
             <b>Lähdit kurssilta {{ request.args.get("name") }}.</b>
             {% endif %}
-            
+
             {% if request.args.get("status") == "joined" %}
             <b>Liityit kurssille {{ request.args.get("name") }}.</b>
             {% elif request.args.get("status") == "failed" %}
             <b>Et voinut liittyä kurssille, koska olet jo kurssilla!</b>
             {% endif %}
-            
+
             {% if own_courses|length == 0 %}
             <h3>Et ole millään kurssilla.</h3>
             {% else %}
@@ -30,7 +30,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for course in own_courses %}
+                    {% for course in own_courses %}
                     <tr>
                         <td>{{ course["name"] }}</td>
                         <td>{{ course["credits"] }}</td>
@@ -46,8 +46,8 @@
                         {% endif %}
                         <td><a href="/exercises_materials?id={{course['id']}}">Tehtävät ja materiaalit</a></td>
                         <td><a href="/leavecourse?id={{course['id']}}" style="color: red">Poistu kurssilta</a></td>
-                    </tr>       
-                {% endfor %}
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
             {% endif %}
@@ -70,7 +70,9 @@
                     <tr>
                         <td>{{ course["name"] }}</td>
                         <td>{{ course["credits"] }}</td>
-                        <td>{{ course["username"] }}</td>
+                        <!-- The |safe is unnecessary, as the username of a teacher shouldn't be blindly trusted. The following is safe: 
+                        <td>{{ course["username"] }}-->
+                        <td>{{ course["username"]|safe }}</td>
                         <td><a href="/joincourse?id={{course['id']}}" style="color: green">Liity kurssille</a></td>
                     </tr>
                     {% endfor %}

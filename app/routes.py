@@ -11,6 +11,7 @@ from db import db
 
 @app.route("/")
 def index():
+    print(generate_password_hash("abc"))
     """Return the main page for the user."""
     return render_template("index.html")
 

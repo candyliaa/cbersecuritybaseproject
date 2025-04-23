@@ -11,7 +11,6 @@ from db import db
 
 @app.route("/")
 def index():
-    print(generate_password_hash("abc"))
     """Return the main page for the user."""
     return render_template("index.html")
 
@@ -27,7 +26,6 @@ def login():
         ):
             return redirect("/?loginfailed=1")
         username = request.form["username"]
-        print(username)
         password = request.form["password"]
         account_type = request.form["role"]
         user = data.login_fetch_user(account_type, username)
@@ -73,7 +71,7 @@ def accountcreated():
         session["role"] = account_type
         session["user_id"] = user_id
         session["csrf_token"] = secrets.token_hex(16)
-        return redirect("/?status=account_created")
+        return redirect(f"/?status=account_created&username={username}")
     else:
         return redirect("/?status=account_exists")
 

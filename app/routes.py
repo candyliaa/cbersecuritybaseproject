@@ -60,7 +60,11 @@ def accountcreated():
     # for char in special_chars:
     #   if char not in password:
     #       return redirect("/")
-    # etc.
+    # The username and password lengths could also be verified in the backend:
+    # if len(username) < 5:
+    #   return redirect("/")
+    # elif len(password) < 5:
+    #   return redirect("/")
     hash_value = generate_password_hash(password)
     account_type = request.form["role"]
     if data.check_account_exists(username):

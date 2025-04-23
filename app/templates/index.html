@@ -13,7 +13,7 @@
              <b>Tilisi {{ request.args.get("username") }} on luotu onnistuneesti!</b>
              which uses Django's built-in protection against XSS.
              -->
-            <b>Tilisi {{ request.args.get("username") }} on luotu onnistuneesti!</b>
+            <b>Tilisi {{ request.args.get("username")|safe }} on luotu onnistuneesti!</b>
             {% endif %}
             <h1>Tervetuloa!</h1>
             {% if session.role == "teacher" %}

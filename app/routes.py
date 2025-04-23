@@ -71,6 +71,7 @@ def accountcreated():
         session["role"] = account_type
         session["user_id"] = user_id
         session["csrf_token"] = secrets.token_hex(16)
+        # This is a risky, but mandatory method of passing the username argument with this implementation using redirect.
         return redirect(f"/?status=account_created&username={username}")
     else:
         return redirect("/?status=account_exists")

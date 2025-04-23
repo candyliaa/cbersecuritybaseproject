@@ -8,7 +8,12 @@
     <div class="row">
         <div class="col-4">
             {% if request.args.get("status") == "account_created" %}
-            <b>Tilisi {{ request.args.get("username")|safe }} on luotu onnistuneesti!</b>
+            <!-- Here, blindly trusting the username is not wise, since the username can be in the form of a script.
+             Instead, it's best to do the following: 
+             <b>Tilisi {{ request.args.get("username") }} on luotu onnistuneesti!</b>
+             which uses Django's built-in protection against XSS.
+             -->
+            <b>Tilisi {{ request.args.get("username") }} on luotu onnistuneesti!</b>
             {% endif %}
             <h1>Tervetuloa!</h1>
             {% if session.role == "teacher" %}

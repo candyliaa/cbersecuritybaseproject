@@ -21,19 +21,23 @@
             <h2>Olet kirjautuneena tilillä {{ session.username }} (opiskelijatili)</h2>
             <a href="/coursesview">
                 <button class="btn btn-primary">Kurssinäkymään</button>
-            <br>
-            {% endif %}
-            <br>
-            <a href="/logout">
-                <button class="btn btn-danger">Kirjaudu ulos</button>
-            </a>
+                <br>
+                {% endif %}
+                <br>
+                <a href="/logout">
+                    <button class="btn btn-danger">Kirjaudu ulos</button>
+                </a>
         </div>
         <div class="col-8">
             <b>Toimintoja</b>
             <p>
-                Sovelluksessa voit opettajana luoda kursseja, lisätä niihin tehtäviä ja tekstimateriaaleja, sekä katsella, kuka kurssin opiskelijoista on tehnyt mitkätkin tehtävät. Voit myös poistaa tehtäviä ja kursseja, jotka olet itse luonut.
+                Sovelluksessa voit opettajana luoda kursseja, lisätä niihin tehtäviä ja tekstimateriaaleja, sekä
+                katsella, kuka kurssin opiskelijoista on tehnyt mitkätkin tehtävät. Voit myös poistaa tehtäviä ja
+                kursseja, jotka olet itse luonut.
             <p>
-                Opiskelijana voit puolestaan liittyä kursseille, tehdä tehtäviä ja poistua kursseilta. Näet tehtävien jälkeen mallivastauksen ja saat suoraan palautteen, menikö se oikein vai väärin. Voit myös katsella opettajan lisäämiä tekstimateriaaleja.
+                Opiskelijana voit puolestaan liittyä kursseille, tehdä tehtäviä ja poistua kursseilta. Näet tehtävien
+                jälkeen mallivastauksen ja saat suoraan palautteen, menikö se oikein vai väärin. Voit myös katsella
+                opettajan lisäämiä tekstimateriaaleja.
         </div>
     </div>
 </div>
@@ -54,11 +58,13 @@
             <b>Kirjaudu sisään:</b>
             <form action="/login" method="POST">
                 <div class="form-floating mb-3">
-                    <input class="form-control" type="text" name="username" id="username" placeholder="Käyttäjänimi" minlength="5" maxlength="20" required>
+                    <input class="form-control" type="text" name="username" id="username" placeholder="Käyttäjänimi"
+                        minlength="1" required>
                     <label for="username">Käyttäjänimi</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input class="form-control" type="password" name="password" id="password" placeholder="Salasana" minlength="5" required>
+                    <input class="form-control" type="password" name="password" id="password" placeholder="Salasana"
+                        required>
                     <label for="password">Salasana</label>
                 </div>
                 <div class="mb-3">
@@ -83,36 +89,42 @@
             <br>
             <button class="btn btn-secondary mb-3" onclick="displayDiv('registerForm')">Avaa lomake</button>
             <div id="registerForm" style="display: none">
-            <form action="/accountcreated" method="POST">
-                <div class="form-floating mb-3">
-                    <input class="form-control" type="text" name="username" placeholder="Käyttäjänimi" minlength="5" maxlength="20" required>
-                    <label for="username">Käyttäjänimi (5-20 merkkiä)</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input class="form-control" type="password" name="password" placeholder="Salasana" minlength="5" required>
-                    <label for="password">Salasana (Vähintään 5 merkkiä)</label>
-                </div>
-                <div class="mb-3">
-                    Oletko opiskelija vai opettaja?
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" id="student" name="role" value="student" required>
-                        <label class="form-check-label" for="student">Opiskelija</label>
+                <form action="/accountcreated" method="POST">
+                    <div class="form-floating mb-3">
+                        <input class="form-control" type="text" name="username" placeholder="Käyttäjänimi" required>
+                        <label for="username">Käyttäjänimi (5-20 merkkiä)</label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" id="teacher" name="role" value="teacher" required>
-                        <label class="form-check-label" for="teacher">Opettaja</label>
-                    </div>   
-                </div>
-                <input type="submit" value="Luo tili" class="btn btn-primary">
-            </form>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" type="text" name="password" placeholder="Salasana" required>
+                        <label for="password">Salasana (Vähintään 5 merkkiä)</label>
+                    </div>
+                    <div class="mb-3">
+                        Oletko opiskelija vai opettaja?
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="student" name="role" value="student"
+                                required>
+                            <label class="form-check-label" for="student">Opiskelija</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="teacher" name="role" value="teacher"
+                                required>
+                            <label class="form-check-label" for="teacher">Opettaja</label>
+                        </div>
+                    </div>
+                    <input type="submit" value="Luo tili" class="btn btn-primary">
+                </form>
             </div>
         </div>
         <div class="col-8">
             <b>Toimintoja</b>
             <p>
-                Sovelluksessa voit opettajana luoda kursseja, lisätä niihin tehtäviä ja tekstimateriaaleja, sekä katsella, kuka kurssin opiskelijoista on tehnyt mitkätkin tehtävät. Voit myös poistaa tehtäviä ja kursseja, jotka olet itse luonut.
+                Sovelluksessa voit opettajana luoda kursseja, lisätä niihin tehtäviä ja tekstimateriaaleja, sekä
+                katsella, kuka kurssin opiskelijoista on tehnyt mitkätkin tehtävät. Voit myös poistaa tehtäviä ja
+                kursseja, jotka olet itse luonut.
             <p>
-                Opiskelijana voit puolestaan liittyä kursseille, tehdä tehtäviä ja poistua kursseilta. Näet tehtävien jälkeen mallivastauksen ja saat suoraan palautteen, menikö se oikein vai väärin. Voit myös katsella opettajan lisäämiä tekstimateriaaleja.
+                Opiskelijana voit puolestaan liittyä kursseille, tehdä tehtäviä ja poistua kursseilta. Näet tehtävien
+                jälkeen mallivastauksen ja saat suoraan palautteen, menikö se oikein vai väärin. Voit myös katsella
+                opettajan lisäämiä tekstimateriaaleja.
         </div>
     </div>
 </div>

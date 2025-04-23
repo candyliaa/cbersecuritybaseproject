@@ -6,11 +6,11 @@ from db import db
 
 
 # Permission check functions
-def permission_check(session: dict, role=None):
-    """Check if user has the correct role to access webpage."""
-    if "role" not in session.keys() or session["role"] != role:
-        return False
-    return True
+# def permission_check(session: dict, role=None):
+#    """Check if user has the correct role to access webpage."""
+#    if "role" not in session.keys() or session["role"] != role:
+#        return False
+#    return True
 
 
 def student_in_course(session: dict, course_id: str):
@@ -67,13 +67,13 @@ def csrf_token_check(session: dict, form_token: str):
 def login_fetch_user(account_type: str, username: str):
     """Fetch user data from database."""
     if account_type == "teacher":
-        sql = f"SELECT id, password FROM teacher_accounts WHERE username = {username}"
+        sql = f"SELECT id, password FROM teacher_accounts WHERE username = '{username}'"
     else:
-        sql = f"SELECT id, password FROM student_accounts WHERE username = {username}"
+        sql = f"SELECT id, password FROM student_accounts WHERE username = '{username}'"
     return db.session.execute(text(sql)).fetchone()
 
 
-# This function safely fetches user data from the database by sanitizing input.
+# This implementation safely fetches user data from the database by sanitizing input.
 # def login_fetch_user(account_type: str, username: str):
 #     """Fetch user data from database."""
 #     if account_type == "teacher":

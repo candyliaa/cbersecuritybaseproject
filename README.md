@@ -1,5 +1,5 @@
 # Cyber Security Base 2025 Project 1
-The current functionality of the app is as follows:
+The functionality of the app is as follows:
 - Users can create a student or a teacher account, which have different functionalities
 - Students can view all courses, join them, leave them, view text materials do exercises
 - Teachers can create courses, add exercises and text materials, delete exercises and delete courses
@@ -12,7 +12,7 @@ The current functionality of the app is as follows:
 <br />
 First, clone the repository:
 ```
-$ git clone https://github.com/candyliaa/tsoha-opetussovellus.git
+$ git clone https://github.com/candyliaa/cybersecuritybaseproject.git
 ```
 You can run the app with [Docker](https://www.docker.com/). You can install it [here](https://docs.docker.com/get-docker/).
 The structure of the Docker containers follows [this](https://docs.docker.com/compose/gettingstarted/) guide.
@@ -35,7 +35,7 @@ Alternatively, the app can be ran without Docker.
 You will need a [local Postgres installation](https://ubuntu.com/server/docs/databases-postgresql). These instructions assume the user is using Ubuntu or an Ubuntu-based distro. For other distros and operating systems, the process may vary.
 Clone the repository:
 ```
-$ git clone https://github.com/candyliaa/tsoha-opetussovellus.git
+$ git clone https://github.com/candyliaa/cybersecuritybaseproject.git
 ```
 Optionally, you can remove all Docker related files: `Dockerfile` in both the `app` and `db` dictionaries, as well as `compose.yaml.example`.
 Then, create a `.env` file in the `app` directory, and add two lines, one for the `SECRET_KEY`, and one for the `DATABASE_URL`. It should look like this:
@@ -89,7 +89,4 @@ You can now run the app with the command
 $ flask run
 ```
 Run the command in the `app` directory.
-# Current state of the app
-The code in `routes.py` has been moved to `data.py` so that the logic in `routes.py` is easier to follow. The code has also been formatted using pylint and Black Formatter.
-The app has been styled using Bootstrap and some css.
-There should be no security vulnerabilities (at least no SQL injection, XSS or CSRF attack risk). 
+ 

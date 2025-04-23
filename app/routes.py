@@ -11,6 +11,7 @@ from db import db
 
 @app.route("/")
 def index():
+    print(generate_password_hash("abc"))
     """Return the main page for the user."""
     return render_template("index.html")
 
@@ -26,6 +27,7 @@ def login():
         ):
             return redirect("/?loginfailed=1")
         username = request.form["username"]
+        print(username)
         password = request.form["password"]
         account_type = request.form["role"]
         user = data.login_fetch_user(account_type, username)
@@ -241,8 +243,8 @@ def delete_exercise():
 @app.route("/coursesview", methods=["POST", "GET"])
 def coursesview():
     """Display a page for students to view all courses."""
-    if not data.permission_check(session, "student"):
-        return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
+    # if not data.permission_check(session, "student"):
+    #    return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
     user_id = session["user_id"]
     course_data = data.student_course_display(user_id)
     all_courses = course_data["all_courses"]

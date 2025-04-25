@@ -1,53 +1,53 @@
 {% extends "layout.html" %}
 
-{% block title %}Kurssityökalut{% endblock %}
+{% block title %}Course tools{% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-8">
-            <h2>Luo kurssi</h2>
+            <h2>Create course</h2>
             <form action="/createcourse" method="POST">
                 <!-- The below attaches a csrf token to the form, which then makes it so that cross-site request forgery isn't posible. -->
                 <!-- <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}"> -->
                 <div class="form-floating">
                     <input class="form-control mb-3" name="course_name" id="course_name" type="text"
                         placeholder="Kurssin nimi" minlength="1" required>
-                    <label for="course_name">Kurssin nimi:</label>
+                    <label for="course_name">Course name:</label>
                 </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" name="credits" id="credits" type="number" placeholder="5" value="5"
                         min="0" max="10" required>
-                    <label for="credits">Opintopisteet:</label>
+                    <label for="credits">Credits:</label>
                 </div>
-                <input class="btn btn-primary" type="submit" value="Luo kurssi">
+                <input class="btn btn-primary" type="submit" value="Create course">
                 {% if request.args.get("status") == "success" %}
-                <p>Kurssi {{ request.args.get("name") }} luotu onnistuneesti!</p>
+                <p>Course {{ request.args.get("name") }} created successfully!</p>
                 {% endif %}
                 {% if request.args.get("status") == "fail" %}
-                <p>Kurssin luonti epäonnistui, yritä uudelleen.</p>
+                <p>Course creation failed, try again.</p>
                 {% endif %}
                 {% if request.args.get("status") == "already_exists" %}
-                <p>Kurssi {{ request.args.get("name") }} on jo olemassa!</p>
+                <p>Course {{ request.args.get("name") }} already exists!</p>
                 {% endif %}
             </form>
             <hr>
-            <h2>Lista kursseista</h2>
+            <h2>List of courses</h2>
             {% if request.args.get("status") == "deleted" %}
-            <b>Kurssi {{ request.args.get("name") }} poistettu onnistuneesti!</b>
+            <b>Course {{ request.args.get("name") }} removed successfully!</b>
             {% elif request.args.get("status") == "course_not_deletable" %}
-            <b>Kurssia ei ole olemassa, joten sitä ei v poistaa!</b>
+            <b>Course doesn't exist, so it can't be deleted!</b>
             {% endif %}
 
             {% if courses|length == 0 %}
-            <h3>Kurssilista on tyhjä.</h3>
+            <h3>Course list is empty.</h3>
             {% else %}
             <table class="table">
                 <thead>
                     <tr>
-                        <th><b>Kurssi</b></th>
-                        <th><b>Opintopisteet</b></th>
-                        <th><b>Opettaja</b></th>
-                        <th><b>Opiskelijoita</b></th>
+                        <th><b>Course</b></th>
+                        <th><b>Credits</b></th>
+                        <th><b>Teacher</b></th>
+                        <th><b>Students</b></th>
                         <th colspan="2"></th>
                     </tr>
                 </thead>
@@ -63,8 +63,8 @@
                         <td>{{ course["student_count"] }}</td>
                         {% endif %}
                         {% if session["username"] == course["username"] %}
-                        <td><a href="/deletecourse?id={{course[0]}}" style="color: red">Poista kurssi</a></td>
-                        <td><a href="/modifycourse?id={{course[0]}}">Muokkaa kurssia</a></td>
+                        <td><a href="/deletecourse?id={{course[0]}}" style="color: red">Delete course</a></td>
+                        <td><a href="/modifycourse?id={{course[0]}}">Edit course</a></td>
                         {% endif %}
                     </tr>
                     {% endfor %}

@@ -6,11 +6,12 @@ from db import db
 
 
 # Permission check functions
+# This function can be used to confirm whether the currently logged in user's role matches what is required to access the requested webpage.
 # def permission_check(session: dict, role=None):
-#    """Check if user has the correct role to access webpage."""
-#    if "role" not in session.keys() or session["role"] != role:
-#        return False
-#    return True
+#     """Check if user has the correct role to access webpage."""
+#     if "role" not in session.keys() or session["role"] != role:
+#         return False
+#     return True
 
 
 def student_in_course(session: dict, course_id: str):

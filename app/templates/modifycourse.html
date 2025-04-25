@@ -5,17 +5,17 @@
 <div class="container">
     <div class="row">
         <div class="col-6">
-            <h2>Valittu kurssi: {{ course["name"] }} ({{ course["credits"] }} op)</h2>
-            <a href="/coursetools">Takaisin kurssityökaluihin</a>
+            <h2>Selected course: {{ course["name"] }} ({{ course["credits"] }} cr)</h2>
+            <a href="/coursetools">Back to course tools</a>
 
             {% if materials|length == 0 %}
-            <h3><b>Kurssilla ei ole tekstimateriaaleja.</b></h3>
+            <h3><b>The course has no text materials.</b></h3>
             {% else %}
             <h3><b>Tekstimateriaaleja: {{ materials|length }}</b></h3>
             {% if request.args.get("status") == "material_added" %}
-            <p>Tekstimateriaali lisätty onnistuneesti!</p>
+            <p>Text material added successfully!</p>
             {% endif %}
-            <button class="btn btn-secondary" onclick="openDiv('list-materials')">Listaa tekstimateriaalit</button>
+            <button class="btn btn-secondary" onclick="openDiv('list-materials')">List text materials</button>
             <div id="list-materials" style="display: none">
                 {% for i in range(materials|length) %}
                 <b>{{ i + 1 }}. materiaali</b>
@@ -29,7 +29,7 @@
             </div>
             {% endif %}
 
-            <button class="btn btn-primary" onclick="openDiv('materialform')">Lisää tekstimateriaalia</button>
+            <button class="btn btn-primary" onclick="openDiv('materialform')">Add text material</button>
             <div id="materialform" style="display: none">
                 <form action="/addtextmaterial" , method="POST">
                     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
@@ -48,40 +48,40 @@
             </div>
 
             {% if exercises|length == 0 %}
-            <h3><b>Kurssilla ei ole tehtäviä.</b></h3>
+            <h3><b>The course has no exercises.</b></h3>
             {% else %}
-            <h3><b>Tehtäviä: {{ exercises|length }}</b></h3>
+            <h3><b>Amount of exercises: {{ exercises|length }}</b></h3>
             {% endif %}
             {% if request.args.get("status") == "exercise_removed" %}
-            <p>Tehtävä poistettu onnistuneesti!</p>
+            <p>Exercise removed successfully!</p>
             {% endif %}
             {% if exercises|length != 0 %}
             {% if request.args.get("status") == "exercise_added" %}
-            <p>Tehtävä lisätty onnistuneesti!</p>
+            <p>Exercise added successfully!</p>
             {% endif %}
             <button class="btn btn-secondary" onclick="openDiv('list-exercises')">Listaa tehtävät</button>
             {% endif %}
             <div id="list-exercises" style="display: none">
                 {% if request.args.get("status") == "remove_failed" %}
-                <b>Tehtävän poisto epäonnistui, koska tehtävää ei ole olemassa!</b>
+                <b>Couldn't remove exercise, because it doesn't exist!</b>
                 {% endif %}
                 <h3>Tehtävät</h3>
                 {% for i in range(exercises|length) %}
                 <b>{{ i + 1 }}. tehtävä</b>
                 <br>
                 <a href="/delete_exercise?course_id={{ course['id'] }}&exercise_id={{ exercises[i][0] }}"
-                    style="color: red">Poista tehtävä</a>
+                    style="color: red">Remove exercise</a>
                 <br>
                 {{exercises[i][1]}}
                 <br>
                 {% if exercises[i][2] is not mapping %}
-                <b>Mallivastaus</b>
+                <b>Example answer</b>
                 <br>
                 <textarea class="form-control" style="resize: none" name="example_answer" rows="3" cols="50"
                     readonly>{{ exercises[i][2] }}</textarea>
                 <br style="line-height: 3">
                 {% else %}
-                <b>Vaihtoehdot</b>
+                <b>Choices</b>
                 <ul style="margin-top: 3px">
                     <li>
                         {{ exercises[i][2]["choices"][0] }}
@@ -112,12 +112,12 @@
                 {% endfor %}
             </div>
 
-            <button class="btn btn-primary" onclick="openDiv('exerciseform')">Lisää tehtävä </button>
+            <button class="btn btn-primary" onclick="openDiv('exerciseform')">Add exercise </button>
             <div id="exerciseform" style="display: none">
                 <br>
-                <button class="btn btn-secondary mb-3" onclick="openTextExercise()">Tekstitehtävä</button>
-                <button class="btn btn-secondary mb-3"
-                    onclick="openMultipleChoiceExercise()">Monivalintatehtävä</button>
+                <button class="btn btn-secondary mb-3" onclick="openTextExercise()">Essay exercise</button>
+                <button class="btn btn-secondary mb-3" onclick="openMultipleChoiceExercise()">Multiple choice
+                    exercise</button>
             </div>
             <div id="textform" style="display: none">
                 <form action="/exercisecreated" id="textform" method="POST">
@@ -127,12 +127,12 @@
                     <div class="form-floating mb-3">
                         <input class="form-control" name="question" id="question" type="text" placeholder="Kysymys"
                             minlength="1" required>
-                        <label for="question">Kysymys</label>
+                        <label for="question">Question</label>
                     </div>
                     <div class="form-floating mb-3">
                         <textarea class="form-control" name="example_answer" placeholder="Vastaus" rows="3"
                             cols="50"></textarea>
-                        <label for="example_answer">Vastaus</label>
+                        <label for="example_answer">Answer</label>
                     </div>
                     <input class="btn btn-primary" type="submit" value="Luo tehtävä">
                 </form>
@@ -145,9 +145,9 @@
                     <div class="form-floating mb-3">
                         <input class="form-control" name="question" id="question" type="text" placeholder="Kysymys"
                             minlength="1" required>
-                        <label for="question">Kysymys</label>
+                        <label for="question">Question</label>
                     </div>
-                    Valinnat:
+                    Choices:
                     <br>
                     <ul style="list-style: none">
                         <li>
@@ -204,9 +204,9 @@
             </div>
             <br style="line-height: 2">
             <hr>
-            <h2>Tehtävien tilastoja:</h2>
+            <h2>Exercise stats:</h2>
             {% for i in range(submissions|length) %}
-            <b>Tehtävä {{i + 1}}</b>
+            <b>Exercise {{i + 1}}</b>
             <ul>
                 {% for _, student in submissions[i].items() %}
                 <li>
@@ -224,14 +224,14 @@
             {% endfor %}
         </div>
         <div class="col-6">
-            <b>Ohjeita</b>
-            <p>Tällä sivulla voit lisätä tekstimateriaaleja ja tehtäviä kurssillesi. Voit lisätä joko essee- tai
-                monivalintatehtäviä.</p>
-            <p>Alla näet tehtävien palautusten tilanteen. Jokaisen kurssilla olevan opiskelijan kohdalla jokaisessa
-                tehtävässä on merkki, joka näyttää, missä vaiheessa tehtävä on:</p>
-            <p>✔ tarkoittaa, että tehtävä on tehty, ja se on oikein.</p>
-            <p>✖ tarkoittaa, että tehtävä on tehty, mutta se meni väärin.</p>
-            <p>// tarkoittaa, että oppilas ei ole vielä lähettänyt vastausta tehtävään.</p>
+            <b>Instructions</b>
+            <p>On this page you can add text materials and exercises to your course. You can add
+                either essay- or multiple-choice exercises.</p>
+            <p>Below, you'll see the status of exercise hand-ins. For each student, the following status is shown for
+                each exercise:</p>
+            <p>✔ means that the exercise has been attempted and is correct.</p>
+            <p>✖ means that the exercise has been attempted but was wrong.</p>
+            <p>// means, that the student is yet to attempt the exercise.</p>
         </div>
     </div>
 </div>

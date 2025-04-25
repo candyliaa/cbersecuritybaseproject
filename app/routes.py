@@ -57,13 +57,13 @@ def accountcreated():
     # Check if password contains at least one special character:
     # special_chars = ["!", "?", "-", "_"]
     # for char in special_chars:
-    #   if char not in password:
-    #       return redirect("/")
+    #     if char not in password:
+    #         return redirect("/?status=invalid_password")
     # The username and password lengths could also be verified in the backend:
     # if len(username) < 5:
-    #   return redirect("/")
+    #     return redirect("/?status=invalid_password")
     # elif len(password) < 5:
-    #   return redirect("/")
+    #     return redirect("/?status=invalid_password")
     hash_value = generate_password_hash(password)
     account_type = request.form["role"]
     if data.check_account_exists(username):
@@ -92,7 +92,7 @@ def coursetools():
     """Show teachers a page to view all courses."""
     # Omitting the following code results in any user being able to view this page, when only teachers should be able to.
     # if not data.permission_check(session, "teacher"):
-    #    return render_template("error.html", error="Ei oikeutta nähdä tätä sivua")
+    #     return render_template("error.html", error="No permission to view this page")
     courses = data.coursetools_courses()
     return render_template("coursetools.html", courses=courses)
 

@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Etusivu{% endblock %}
+{% block title %}Main page{% endblock %}
 <title>Opetussovellus</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 {% block content %}
@@ -10,39 +10,37 @@
             {% if request.args.get("status") == "account_created" %}
             <!-- Here, blindly trusting the username is not wise, since the username can be in the form of a script.
              Instead, it's best to do the following: 
-             <b>Tilisi {{ request.args.get("username") }} on luotu onnistuneesti!</b>
+             <b>Account {{ request.args.get("username") }} was created successfully!</b>
              which uses Django's built-in protection against XSS.
              -->
-            <b>Tilisi {{ request.args.get("username")|safe }} on luotu onnistuneesti!</b>
+            <b>Account {{ request.args.get("username")|safe }} was created successfully!</b>
             {% endif %}
-            <h1>Tervetuloa!</h1>
+            <h1>Welcome!</h1>
             {% if session.role == "teacher" %}
-            <h2>Olet kirjautuneena tilillä {{ session.username }} (opettajatili)</h2>
+            <h2>You are logged in as {{ session.username }} (teacher account)</h2>
             <a href="/coursetools">
-                <button class="btn btn-primary">Kurssityökalut</button>
+                <button class="btn btn-primary">Course tools</button>
             </a>
             <br>
             {% else %}
-            <h2>Olet kirjautuneena tilillä {{ session.username }} (opiskelijatili)</h2>
+            <h2>You are logged in as {{ session.username }} (student account)</h2>
             <a href="/coursesview">
-                <button class="btn btn-primary">Kurssinäkymään</button>
+                <button class="btn btn-primary">Course view</button>
                 <br>
                 {% endif %}
                 <br>
                 <a href="/logout">
-                    <button class="btn btn-danger">Kirjaudu ulos</button>
+                    <button class="btn btn-danger">Log out</button>
                 </a>
         </div>
         <div class="col-8">
-            <b>Toimintoja</b>
+            <b>Functionality</b>
             <p>
-                Sovelluksessa voit opettajana luoda kursseja, lisätä niihin tehtäviä ja tekstimateriaaleja, sekä
-                katsella, kuka kurssin opiskelijoista on tehnyt mitkätkin tehtävät. Voit myös poistaa tehtäviä ja
-                kursseja, jotka olet itse luonut.
+                As a teacher, you can create courses, add exercisesa and text materials, and view which of the students
+                have done which exercises. You can also remove exercises and courses that you have created.
             <p>
-                Opiskelijana voit puolestaan liittyä kursseille, tehdä tehtäviä ja poistua kursseilta. Näet tehtävien
-                jälkeen mallivastauksen ja saat suoraan palautteen, menikö se oikein vai väärin. Voit myös katsella
-                opettajan lisäämiä tekstimateriaaleja.
+                As a student, you can join and leave courses, and attempt exercises in those courses. You'll see example
+                answers for each exercise after attempting it, and you can also view text materials added by teachers.
         </div>
     </div>
 </div>
@@ -50,87 +48,88 @@
 <div class="container">
     <div class="row">
         <div class="col-4">
-            <h1>Tervetuloa!</h1>
+            <h1>Welcome!</h1>
             {% if request.args.get("loginfailed") == "1" %}
-            <title>Kirjautuminen epäonnistui</title>
-            <p style="color:red">Tiliä ei ole olemassa, kokeile uudelleen.</p>
-            <p>Valitsitko väärän tilityypin?</p>
+            <title>Login unsuccessful</title>
+            <p style="color:red">Account doesn't exist. Try again.</p>
+            <p>Did you select the wrong account type?</p>
             {% endif %}
             {% if request.args.get("loginfailed") == "2" %}
-            <title>Salasana väärin</title>
-            <p style="color:red">Salasana on väärin, kokeile uudelleen.</p>
+            <title>Wrong password</title>
+            <p style="color:red">Wrong password! Try again.</p>
             {% endif %}
-            <b>Kirjaudu sisään:</b>
+            <b>Log in:</b>
             <form action="/login" method="POST">
                 <div class="form-floating mb-3">
                     <input class="form-control" type="text" name="username" id="username" placeholder="Käyttäjänimi"
                         minlength="1" required>
-                    <label for="username">Käyttäjänimi</label>
+                    <label for="username">Username</label>
                 </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" type="password" name="password" id="password" placeholder="Salasana"
                         required>
-                    <label for="password">Salasana</label>
+                    <label for="password">Password</label>
                 </div>
                 <div class="mb-3">
-                    Oletko opiskelija vai opettaja?
+                    Are you a student or a teacher?
                     <div class="form-check">
                         <input class="form-check-input" type="radio" id="student" name="role" value="student" required>
-                        <label class="form-check-label" for="student">Opiskelija</label>
+                        <label class="form-check-label" for="student">Student</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" id="teacher" name="role" value="teacher" required>
-                        <label class="form-check-label" for="teacher">Opettaja</label>
+                        <label class="form-check-label" for="teacher">Teacher</label>
                     </div>
                 </div>
-                <input type="submit" value="Kirjaudu sisään" class="btn btn-primary">
+                <input type="submit" value="Log in" class="btn btn-primary">
             </form>
             <br>
             {% if request.args.get("status") == "account_exists" %}
-            <b>Tuon niminen käyttäjätili on jo olemassa!</b>
-            <br>
+            <b>An account with that username already exists!</b>
             {% endif %}
-            <b>Tai jos sinulla ei ole vielä tiliä, luo tili:</b>
+            <!-- {% if request.args.get("status") == "invalid_password" %}
+            <b>The provided password is too weak. It's either missing a special character or it's too short.</b>
+            -->
+            {% endif %}
+            <b>If you don't have an account yet, register below:</b>
             <br>
-            <button class="btn btn-secondary mb-3" onclick="displayDiv('registerForm')">Avaa lomake</button>
+            <button class="btn btn-secondary mb-3" onclick="displayDiv('registerForm')">Open form</button>
             <div id="registerForm" style="display: none">
                 <form action="/accountcreated" method="POST">
                     <div class="form-floating mb-3">
                         <input class="form-control" type="text" name="username" placeholder="Käyttäjänimi" required>
                         <!-- In the input field, it's possible to set a minimum and maximum length for the input string. -->
-                        <label for="username">Käyttäjänimi (5-20 merkkiä)</label>
+                        <label for="username">Username</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" type="text" name="password" placeholder="Salasana" required>
-                        <label for="password">Salasana (Vähintään 5 merkkiä)</label>
+                        <label for="password">Password</label>
                     </div>
                     <div class="mb-3">
-                        Oletko opiskelija vai opettaja?
+                        Are you a student or teacher?
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="student" name="role" value="student"
                                 required>
-                            <label class="form-check-label" for="student">Opiskelija</label>
+                            <label class="form-check-label" for="student">Student</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="teacher" name="role" value="teacher"
                                 required>
-                            <label class="form-check-label" for="teacher">Opettaja</label>
+                            <label class="form-check-label" for="teacher">Teacher</label>
                         </div>
                     </div>
-                    <input type="submit" value="Luo tili" class="btn btn-primary">
+                    <input type="submit" value="Create account" class="btn btn-primary">
                 </form>
             </div>
         </div>
         <div class="col-8">
-            <b>Toimintoja</b>
+            <b>Functionality</b>
             <p>
-                Sovelluksessa voit opettajana luoda kursseja, lisätä niihin tehtäviä ja tekstimateriaaleja, sekä
-                katsella, kuka kurssin opiskelijoista on tehnyt mitkätkin tehtävät. Voit myös poistaa tehtäviä ja
-                kursseja, jotka olet itse luonut.
+                As a teacher, you can create courses, add exercisesa and text materials, and view which of the students
+                have done which exercises. You can also remove exercises and courses that you have created.
             <p>
-                Opiskelijana voit puolestaan liittyä kursseille, tehdä tehtäviä ja poistua kursseilta. Näet tehtävien
-                jälkeen mallivastauksen ja saat suoraan palautteen, menikö se oikein vai väärin. Voit myös katsella
-                opettajan lisäämiä tekstimateriaaleja.
+                As a student, you can join and leave courses, and attempt exercises in those courses. You'll see example
+                answers for each exercise after attempting it, and you can also view text materials added by teachers.
         </div>
     </div>
 </div>

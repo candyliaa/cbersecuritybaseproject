@@ -1,30 +1,30 @@
 {% extends "layout.html" %}
-{% block title %}Kurssinäkymä{% endblock %}
+{% block title %}Course view{% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-8">
-            <h2>Omat kurssit</h2>
+            <h2>Own courses</h2>
             {% if request.args.get("status") == "left" %}
-            <b>Lähdit kurssilta {{ request.args.get("name") }}.</b>
+            <b>Left course {{ request.args.get("name") }}.</b>
             {% endif %}
 
             {% if request.args.get("status") == "joined" %}
-            <b>Liityit kurssille {{ request.args.get("name") }}.</b>
+            <b>Joined course {{ request.args.get("name") }}.</b>
             {% elif request.args.get("status") == "failed" %}
-            <b>Et voinut liittyä kurssille, koska olet jo kurssilla!</b>
+            <b>Couldn't enrol course, because you're already in it!</b>
             {% endif %}
 
             {% if own_courses|length == 0 %}
-            <h3>Et ole millään kurssilla.</h3>
+            <h3>You haven't enrolled in any courses.</h3>
             {% else %}
             <table class="table">
                 <thead>
                     <tr>
-                        <th><b>Kurssi</b></th>
-                        <th><b>op</b></th>
-                        <th><b>Opettaja</b></th>
-                        <th><b>Tehtäviä tehty</b></th>
+                        <th><b>Course</b></th>
+                        <th><b>cr</b></th>
+                        <th><b>Teacher</b></th>
+                        <th><b>Exercises completed</b></th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -36,7 +36,7 @@
                         <td>{{ course["credits"] }}</td>
                         <td>{{ course["username"] }}</td>
                         {% if not course['id'] in total_exercises_dict.keys() %}
-                        <td>Kurssilla ei ole tehtäviä.</td>
+                        <td>Course has no exercises.</td>
                         {% else %}
                         {% if exercises_done_dict[course['id']] is not defined %}
                         <td>0 / {{ total_exercises_dict[course['id']] }}</td>
@@ -44,24 +44,24 @@
                         <td>{{ exercises_done_dict[course['id']] }} / {{ total_exercises_dict[course['id']] }}</td>
                         {% endif %}
                         {% endif %}
-                        <td><a href="/exercises_materials?id={{course['id']}}">Tehtävät ja materiaalit</a></td>
-                        <td><a href="/leavecourse?id={{course['id']}}" style="color: red">Poistu kurssilta</a></td>
+                        <td><a href="/exercises_materials?id={{course['id']}}">Exercises and materials</a></td>
+                        <td><a href="/leavecourse?id={{course['id']}}" style="color: red">Leave course</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
             {% endif %}
             <hr>
-            <h2>Kurssitarjonta</h2>
+            <h2>Course selection</h2>
             {% if other_courses|length == 0 %}
-            <h3>Kurssilista on tyhjä.</h3>
+            <h3>Course list is empty.</h3>
             {% else %}
             <table class="table">
                 <thead>
                     <tr>
-                        <th><b>Kurssi</b></th>
-                        <th><b>op</b></th>
-                        <th><b>Opettaja</b></th>
+                        <th><b>Course</b></th>
+                        <th><b>cr</b></th>
+                        <th><b>Teacher</b></th>
                         <th colspan="1"></th>
                     </tr>
                 </thead>
@@ -70,10 +70,13 @@
                     <tr>
                         <td>{{ course["name"] }}</td>
                         <td>{{ course["credits"] }}</td>
-                        <!-- The |safe is unnecessary, as the username of a teacher shouldn't be blindly trusted. The following is safe: 
-                        <td>{{ course["username"] }}-->
+                        <!-- The |safe is unnecessary, as the username of a teacher shouldn't be blindly trusted, because it's user-inputted data.
+                        It can be helpful in escaping characters in HTML, but it's not a reason to open up a vulnerability in this case.
+                        The following is a safe implementation: 
+                        <td>{{ course["username"] }}
+                        -->
                         <td>{{ course["username"]|safe }}</td>
-                        <td><a href="/joincourse?id={{course['id']}}" style="color: green">Liity kurssille</a></td>
+                        <td><a href="/joincourse?id={{course['id']}}" style="color: green">Enrol in course</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
